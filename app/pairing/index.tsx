@@ -6,18 +6,38 @@ import {
   Image,
   TouchableOpacity,
   StatusBar,
+  Animated,
 } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { colors, typography } from "../../src/theme";
 
 export default function PairingScreen() {
+  const [showDialog, setShowDialog] = React.useState(false);
+  const centerContentPosition = React.useRef(new Animated.Value(95)).current;
+
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowDialog(true);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  React.useEffect(() => {
+    Animated.timing(centerContentPosition, {
+      toValue: showDialog ? 280 : 95,
+      duration: 300,
+      useNativeDriver: false,
+    }).start();
+  }, [showDialog]);
+
   return (
     <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor="#000000" />
 
       {/* Log in button - Top Right */}
       <TouchableOpacity style={styles.loginButton}>
-        <Text style={styles.loginText}>Log in</Text>
+        <Text style={styles.loginText}>Đăng nhập</Text>
       </TouchableOpacity>
 
       {/* Stars background */}
@@ -35,7 +55,9 @@ export default function PairingScreen() {
       />
 
       {/* Center content */}
-      <View style={styles.centerContent}>
+      <Animated.View
+        style={[styles.centerContent, { bottom: centerContentPosition }]}
+      >
         {/* Search icon */}
         <View style={styles.searchIconContainer}>
           <Svg width={24} height={24} viewBox="0 0 24 24" fill="none">
@@ -48,12 +70,45 @@ export default function PairingScreen() {
         </View>
 
         {/* Text content */}
-        <Text style={styles.title}>Looking for camera</Text>
+        <Text style={styles.title}>Đang tìm camera</Text>
         <Text style={styles.description}>
-          Make sure it connected to the power outlet,{"\n"}
-          blinking and your iPhone is close to it.
+          Hãy đảm bảo camera của bạn đã được bật và kết nối chung với mạng điện
+          thoại của bạn để tiếp tục
         </Text>
-      </View>
+      </Animated.View>
+
+      {/* Dialog */}
+      {showDialog && (
+        <View style={styles.dialogContainer}>
+          <TouchableOpacity
+            style={styles.closeButton}
+            onPress={() => setShowDialog(false)}
+          >
+            <View style={styles.closeIcon}>
+              <Text style={styles.closeIconText}>×</Text>
+            </View>
+          </TouchableOpacity>
+
+          <Text style={styles.dialogTitle}>Problem solving</Text>
+          <Text style={styles.dialogQuestion}>Is camera plugged in?</Text>
+
+          <View style={styles.dialogButtons}>
+            <TouchableOpacity
+              style={[styles.dialogButton, styles.yesButton]}
+              onPress={() => setShowDialog(false)}
+            >
+              <Text style={styles.dialogButtonText}>Yes</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.dialogButton, styles.noButton]}
+              onPress={() => setShowDialog(false)}
+            >
+              <Text style={styles.dialogButtonText}>No</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
@@ -91,7 +146,6 @@ const styles = StyleSheet.create({
   },
   centerContent: {
     position: "absolute",
-    bottom: 95,
     left: 0,
     right: 0,
     alignItems: "center",
@@ -114,5 +168,69 @@ const styles = StyleSheet.create({
     lineHeight: 18,
     color: colors.label.secondary,
     textAlign: "center",
+  },
+  dialogContainer: {
+    position: "absolute",
+    bottom: 95,
+    left: 16,
+    right: 16,
+    backgroundColor: "rgba(28, 28, 30, 0.95)",
+    borderRadius: 14,
+    padding: 20,
+    paddingTop: 28,
+  },
+  closeButton: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    zIndex: 1,
+  },
+  closeIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: "rgba(120, 120, 128, 0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  closeIconText: {
+    fontSize: 24,
+    color: colors.label.secondary,
+    fontWeight: "300",
+  },
+  dialogTitle: {
+    fontSize: 13,
+    fontFamily: typography.fontFamily.regular,
+    color: colors.label.secondary,
+    textAlign: "center",
+    marginBottom: 8,
+  },
+  dialogQuestion: {
+    fontSize: 17,
+    fontFamily: typography.fontFamily.semibold,
+    color: colors.label.primary,
+    textAlign: "center",
+    marginBottom: 20,
+  },
+  dialogButtons: {
+    flexDirection: "row",
+    gap: 12,
+  },
+  dialogButton: {
+    flex: 1,
+    paddingVertical: 12,
+    borderRadius: 10,
+    alignItems: "center",
+  },
+  yesButton: {
+    backgroundColor: "rgba(120, 120, 128, 0.2)",
+  },
+  noButton: {
+    backgroundColor: "rgba(120, 120, 128, 0.2)",
+  },
+  dialogButtonText: {
+    fontSize: 17,
+    fontFamily: typography.fontFamily.semibold,
+    color: colors.label.primary,
   },
 });
