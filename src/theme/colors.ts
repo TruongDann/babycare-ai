@@ -1,12 +1,13 @@
 export const colors = {
   // Primary (Baby Blue - calming, trustworthy)
   primary: {
-    50: "#E3F2FD",
-    100: "#BBDEFB",
-    500: "#2196F3",
-    600: "#1E88E5",
-    700: "#1976D2",
-    900: "#0D47A1",
+    default: "#1c1c1e",
+    50: "#3a3a3c",
+    100: "#2c2c2e",
+    500: "#1c1c1e",
+    600: "#171719",
+    700: "#131315",
+    900: "#0a0a0b",
   },
 
   // Secondary (Soft Green - safe, healthy)
@@ -47,7 +48,7 @@ export const colors = {
   // Backgrounds
   background: {
     light: "#FFFFFF",
-    dark: "#121212",
+    dark: "#1c1c1e",
     card: "#FFFFFF",
     elevated: "#F5F5F5",
   },
@@ -64,6 +65,28 @@ export const colors = {
   label: {
     primary: "#FFFFFF",
     secondary: "rgba(235, 235, 245, 0.6)",
+    tertiary: "rgba(235, 235, 245, 0.3)",
+  },
+
+  // System Colors (iOS-like)
+  systemBlue: "#007AFF",
+  systemGreen: "#34C759",
+  systemRed: "#FF3B30",
+  systemYellow: "#FFCC00",
+
+  // System Backgrounds
+  systemBackground: {
+    primary: "#1C1C1E",
+    secondary: "#2C2C2E",
+    tertiary: "#3A3A3C",
+  },
+
+  // Fill
+  fill: {
+    primary: "rgba(120, 120, 128, 0.36)",
+    secondary: "rgba(120, 120, 128, 0.32)",
+    tertiary: "rgba(118, 118, 128, 0.24)",
+    quaternary: "rgba(118, 118, 128, 0.18)",
   },
 
   // Common

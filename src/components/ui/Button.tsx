@@ -6,13 +6,21 @@ import {
   ActivityIndicator,
   ViewStyle,
   TextStyle,
+  View,
 } from "react-native";
 import { colors, typography, spacing, borderRadius } from "../../theme";
 
 interface ButtonProps {
-  children: React.ReactNode;
+  children?: React.ReactNode;
+  title?: string;
   onPress: () => void;
-  variant?: "primary" | "secondary" | "ghost" | "danger";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "ghost"
+    | "danger"
+    | "transparent"
+    | "close";
   size?: "sm" | "md" | "lg";
   disabled?: boolean;
   loading?: boolean;
@@ -22,6 +30,7 @@ interface ButtonProps {
 
 export const Button: React.FC<ButtonProps> = ({
   children,
+  title,
   onPress,
   variant = "primary",
   size = "md",
@@ -30,18 +39,41 @@ export const Button: React.FC<ButtonProps> = ({
   style,
   textStyle,
 }) => {
+  // Close button variant
+  if (variant === "close") {
+    return (
+      <TouchableOpacity style={[styles.closeButton, style]} onPress={onPress}>
+        <View style={styles.closeIcon}>
+          <Text style={styles.closeIconText}>×</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  }
+
   const buttonStyles = [
     styles.button,
-    styles[variant],
-    styles[`size_${size}`],
+    variant === "primary" && styles.primary,
+    variant === "secondary" && styles.secondary,
+    variant === "ghost" && styles.ghost,
+    variant === "danger" && styles.danger,
+    variant === "transparent" && styles.transparent,
+    size === "sm" && styles.size_sm,
+    size === "md" && styles.size_md,
+    size === "lg" && styles.size_lg,
     disabled && styles.disabled,
     style,
   ];
 
   const textStyles = [
     styles.text,
-    styles[`text_${variant}`],
-    styles[`textSize_${size}`],
+    variant === "primary" && styles.text_primary,
+    variant === "secondary" && styles.text_secondary,
+    variant === "ghost" && styles.text_ghost,
+    variant === "danger" && styles.text_danger,
+    variant === "transparent" && styles.text_transparent,
+    size === "sm" && styles.textSize_sm,
+    size === "md" && styles.textSize_md,
+    size === "lg" && styles.textSize_lg,
     textStyle,
   ];
 
@@ -59,7 +91,7 @@ export const Button: React.FC<ButtonProps> = ({
           }
         />
       ) : (
-        <Text style={textStyles}>{children}</Text>
+        <Text style={textStyles}>{title || children}</Text>
       )}
     </TouchableOpacity>
   );
@@ -87,6 +119,30 @@ const styles = StyleSheet.create({
   },
   danger: {
     backgroundColor: colors.error,
+  },
+  transparent: {
+    backgroundColor: "rgba(120, 120, 128, 0.2)",
+  },
+
+  // Close button styles
+  closeButton: {
+    position: "absolute",
+    top: 8,
+    right: 8,
+    zIndex: 1,
+  },
+  closeIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: 15,
+    backgroundColor: "rgba(120, 120, 128, 0.2)",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  closeIconText: {
+    fontSize: 24,
+    color: colors.label.secondary,
+    fontWeight: "300",
   },
 
   // Sizes
@@ -126,6 +182,9 @@ const styles = StyleSheet.create({
   },
   text_danger: {
     color: colors.text.inverse,
+  },
+  text_transparent: {
+    color: colors.label.primary,
   },
 
   // Text sizes
